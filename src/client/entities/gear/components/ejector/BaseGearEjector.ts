@@ -46,6 +46,8 @@ export default class BaseGearEjector extends ClientGearComponent {
     constructor(statistics : ClientGearStatistics) {
         super(statistics);
 
+        // Set boilerplate for tinkers.
+
         // Add a the vertical & horizontal speeds
         this.statistics.addStatistic(GearStatisticType.VERTICAL_SPEED, 10);
         this.statistics.addStatistic(GearStatisticType.HORIZONTAL_SPEED, 55);
