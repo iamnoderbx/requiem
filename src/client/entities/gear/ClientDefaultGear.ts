@@ -24,12 +24,15 @@ import BaseGearEjector from "./components/ejector/BaseGearEjector";
 import BaseGearHandles from "./components/handles/BaseGearHandles";
 import BaseGearGrapples from "./components/grapples/BaseGearGrapples";
 import { BaseGearParticles } from "./components/particles/BaseGearParticles";
+import { ClientGearTinkers } from "./classes/ClientGearTinkers";
 
 // Register the entity to listen for the EntityPopulation with
 // signature of Client
 @Listeners.EntityReplicatedWith(Entities.Weapons.GEAR)
 export class ClientDefaultGear extends BaseEntity {
     private statistics : ClientGearStatistics = new ClientGearStatistics();
+    private tinkers : ClientGearTinkers = new ClientGearTinkers();
+
     private components! : Record<GearComponents, ClientGearComponent>
 
     private isNetworkOwner : boolean = false;
@@ -44,18 +47,18 @@ export class ClientDefaultGear extends BaseEntity {
         this.isNetworkOwner = true;
 
         this.components = {
-            [GearComponents.GYROSCOPE]:     new BaseGearGyroscope(this.statistics),
-            [GearComponents.HOUSING]:       new BaseGearHousing(this.statistics),
-            [GearComponents.SPOOLING]:      new BaseGearSpooling(this.statistics),
-            [GearComponents.TURBINE]:       new BaseGearTurbine(this.statistics),
-            [GearComponents.WINCHES]:       new BaseGearWinches(this.statistics),
-            [GearComponents.HOLSTERS]:      new BaseGearHolsters(this.statistics),
-            [GearComponents.CANNISTERS]:    new BaseGearCannister(this.statistics),
-            [GearComponents.EJECTOR]:       new BaseGearEjector(this.statistics),
-            [GearComponents.HANDLES]:       new BaseGearHandles(this.statistics),
-            [GearComponents.GRAPPLES]:      new BaseGearGrapples(this.statistics),
-            [GearComponents.MOVEMENT]:      new BaseGearMovement(this.statistics),
-            [GearComponents.BLADES]:        new BaseGearBlades(this.statistics),
+            [GearComponents.GYROSCOPE]:     new BaseGearGyroscope(this.statistics, this.tinkers),
+            [GearComponents.HOUSING]:       new BaseGearHousing(this.statistics, this.tinkers),
+            [GearComponents.SPOOLING]:      new BaseGearSpooling(this.statistics, this.tinkers),
+            [GearComponents.TURBINE]:       new BaseGearTurbine(this.statistics, this.tinkers),
+            [GearComponents.WINCHES]:       new BaseGearWinches(this.statistics, this.tinkers),
+            [GearComponents.HOLSTERS]:      new BaseGearHolsters(this.statistics, this.tinkers),
+            [GearComponents.CANNISTERS]:    new BaseGearCannister(this.statistics, this.tinkers),
+            [GearComponents.EJECTOR]:       new BaseGearEjector(this.statistics, this.tinkers),
+            [GearComponents.HANDLES]:       new BaseGearHandles(this.statistics, this.tinkers),
+            [GearComponents.GRAPPLES]:      new BaseGearGrapples(this.statistics, this.tinkers),
+            [GearComponents.MOVEMENT]:      new BaseGearMovement(this.statistics, this.tinkers),
+            [GearComponents.BLADES]:        new BaseGearBlades(this.statistics, this.tinkers),
         }
     }
 
@@ -64,7 +67,7 @@ export class ClientDefaultGear extends BaseEntity {
     }
     
     private listeners() {
-        const particles = new BaseGearParticles(this.statistics);
+        const particles = new BaseGearParticles(this.statistics, this.tinkers);
         this.network.listen(GearActions.PARTICLES, (particle : string) => particles.emit(particle))
     }
 

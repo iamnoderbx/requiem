@@ -9,6 +9,7 @@ import { NetworkEntity } from "client/network/NetworkEntity";
 import { GearActions } from "shared/utilities/network/Events";
 import { BaseEntity } from "client/entities/BaseEntity";
 import { BaseHumanoidEntity } from "client/entities/humanoid/BaseHumanoidEntity";
+import { ClientGearTinkers } from "../../classes/ClientGearTinkers";
 
 export default class BaseGearGrapples extends ClientGearComponent {
     private grapples : { left : ClientGearGrapple, right : ClientGearGrapple };
@@ -18,8 +19,8 @@ export default class BaseGearGrapples extends ClientGearComponent {
 
     private orbit : AnimationTrack | undefined
     
-    constructor(statistics : ClientGearStatistics) {
-        super(statistics);
+    constructor(statistics : ClientGearStatistics, tinkers : ClientGearTinkers) {
+        super(statistics, tinkers);
 
         // Create a new grapple for the left and right hand
         this.grapples = { 

@@ -3,6 +3,7 @@ import { ClientGearComponent, GearComponents, GearComponentsList } from "../../c
 import { ClientGearStatistics } from "../../classes/ClientGearStatistics";
 import BaseGearGrapples from "../grapples/BaseGearGrapples";
 import BaseGearHandles from "../handles/BaseGearHandles";
+import { ClientGearTinkers } from "../../classes/ClientGearTinkers";
 
 export default class BaseGearWinches extends ClientGearComponent {
     private input : Input = new Input();
@@ -13,8 +14,8 @@ export default class BaseGearWinches extends ClientGearComponent {
 
     private ropes : {left? : {rope? : RopeConstraint}, right? : {rope? : RopeConstraint}} = {}
     
-    constructor(statistics : ClientGearStatistics) {
-        super(statistics);
+    constructor(statistics : ClientGearStatistics, tinkers : ClientGearTinkers) {
+        super(statistics, tinkers);
     };
 
     private async toggled(state : Enum.UserInputState) : Promise<Enum.ContextActionResult> {

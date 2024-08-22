@@ -3,13 +3,14 @@ import { ClientGearComponent, GearComponents, GearComponentsList } from "../../c
 import { ClientGearStatistics, GearStatisticType } from "../../classes/ClientGearStatistics";
 import BaseGearGrapples from "../grapples/BaseGearGrapples";
 import BaseGearHandles from "../handles/BaseGearHandles";
+import { ClientGearTinkers } from "../../classes/ClientGearTinkers";
 
 export default class BaseGearGyroscope extends ClientGearComponent {
     private gyro : BodyGyro | undefined;
 
-    constructor(statistics : ClientGearStatistics) {
+    constructor(statistics : ClientGearStatistics, tinkers : ClientGearTinkers) {
         // Call the super constructor
-        super(statistics);
+        super(statistics, tinkers);
     
         // Add a gyroscope speed of 10
         this.statistics.addStatistic(GearStatisticType.GYRO_SPEED, 350);     // Default Speed (350)

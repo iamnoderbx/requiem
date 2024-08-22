@@ -1,9 +1,10 @@
 import { ClientGearComponent } from "../../classes/ClientGearComponent";
 import { ClientGearStatistics } from "../../classes/ClientGearStatistics";
+import { ClientGearTinkers } from "../../classes/ClientGearTinkers";
 
 export default class BaseGearHolsters extends ClientGearComponent {
-    constructor(statistics : ClientGearStatistics) {
-        super(statistics);
+    constructor(statistics : ClientGearStatistics, tinkers : ClientGearTinkers) {
+        super(statistics, tinkers);
     };
     
     // Updated is called every frame that a grapple is active

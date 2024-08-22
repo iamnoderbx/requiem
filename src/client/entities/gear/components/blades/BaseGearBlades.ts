@@ -6,6 +6,7 @@ import { States } from "client/entities/player/ClientPlayerStates";
 import animations, { Actions } from "shared/animations/animations";
 import { NetworkEntity } from "client/network/NetworkEntity";
 import { GearActions } from "shared/utilities/network/Events";
+import { ClientGearTinkers } from "../../classes/ClientGearTinkers";
 
 export default class BaseGearBlades extends ClientGearComponent {
     private input : Input = new Input();
@@ -14,8 +15,8 @@ export default class BaseGearBlades extends ClientGearComponent {
     private isBladesEquipped : boolean = false;
     private swing : number = 0;
 
-    constructor(statistics : ClientGearStatistics) {
-        super(statistics);
+    constructor(statistics : ClientGearStatistics, tinkers : ClientGearTinkers) {
+        super(statistics, tinkers);
     };
 
     private async onBladeSwingRequest(state : Enum.UserInputState, network : NetworkEntity) : Promise<Enum.ContextActionResult> {

@@ -1,9 +1,10 @@
 import { ClientGearComponent } from "../../classes/ClientGearComponent";
 import { ClientGearStatistics, GearStatisticType } from "../../classes/ClientGearStatistics";
+import { ClientGearTinkers } from "../../classes/ClientGearTinkers";
 
 export default class BaseGearSpooling extends ClientGearComponent {
-    constructor(statistics : ClientGearStatistics) {
-        super(statistics);
+    constructor(statistics : ClientGearStatistics, tinkers : ClientGearTinkers) {
+        super(statistics, tinkers);
 
         statistics.addStatistic(GearStatisticType.GRAPPLE_LENGTH, 2000)
     };

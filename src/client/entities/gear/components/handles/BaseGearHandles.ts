@@ -8,6 +8,7 @@ import { Memory } from "shared/utilities/memory.utilities";
 import { ClientGearGrapple } from "../../classes/ClientGearGrapple";
 import BaseGearGrapples from "../grapples/BaseGearGrapples";
 import BaseGearBlades from "../blades/BaseGearBlades";
+import { ClientGearTinkers } from "../../classes/ClientGearTinkers";
 
 export default class BaseGearHandles extends ClientGearComponent {
     // Create a new input
@@ -19,8 +20,8 @@ export default class BaseGearHandles extends ClientGearComponent {
     // Create a new grapple middleware
     private grappleMiddleware : Array<(grappling : boolean) => void> = [];
     
-    constructor(statistics : ClientGearStatistics) {
-        super(statistics);
+    constructor(statistics : ClientGearStatistics, tinkers : ClientGearTinkers) {
+        super(statistics, tinkers);
     };
 
     // Check if the handles are equipped

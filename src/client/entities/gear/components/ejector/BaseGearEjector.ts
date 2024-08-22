@@ -9,6 +9,7 @@ import BaseGearWinches from "../winches/BaseGearWinches";
 import { Number } from "shared/utilities/number.utilities";
 import { NetworkEntity } from "client/network/NetworkEntity";
 import { Vector } from "shared/utilities/vector3.utilities";
+import { ClientGearTinkers } from "../../classes/ClientGearTinkers";
 
 export enum GearEjectorDirection {
     FORWARD = "FORWARD",
@@ -43,8 +44,8 @@ export default class BaseGearEjector extends ClientGearComponent {
 
     private isGasBoostingValue : boolean = false;
 
-    constructor(statistics : ClientGearStatistics) {
-        super(statistics);
+    constructor(statistics : ClientGearStatistics, tinkers : ClientGearTinkers) {
+        super(statistics, tinkers);
 
         // Add a the vertical & horizontal speeds
         this.statistics.addStatistic(GearStatisticType.VERTICAL_SPEED, 10);
@@ -63,14 +64,8 @@ export default class BaseGearEjector extends ClientGearComponent {
         // Modify the weight of the ejector
         this.statistics.addStatistic(GearStatisticType.WEIGHT, 5);
 
-        this.force.Connect(() => {
-            this.bodyVelocity.MaxForce = this.force.Get();
-
-            if(this.force.Get().Magnitude < 1) {
-                this.bodyVelocity.Parent = undefined;
-                Physics.RestoreClientPhysics()
-            }
-        })
+        // Tinkers
+        
     };
 
     private create() {
@@ -208,6 +203,16 @@ export default class BaseGearEjector extends ClientGearComponent {
 
         // Add a middleware to the grapple
         handles.addGrappleMiddleware((isGrappling : boolean) => isGrappling ? this.updated(grapples) : this.clean())
+
+        // Add decay to the force
+        this.force.Connect(() => {
+            this.bodyVelocity.MaxForce = this.force.Get();
+
+            if(this.force.Get().Magnitude > 1) return
+
+            this.bodyVelocity.Parent = undefined;
+            Physics.RestoreClientPhysics()
+        })
 
         // Listen for the gas ejector boost changed
         this.onGasEjectorBoostChanged.Connect((isBoosting : boolean) => {

@@ -9,6 +9,7 @@ import { RunService, TweenService, Workspace } from "@rbxts/services";
 import { States } from "client/entities/player/ClientPlayerStates";
 import BaseGearEjector from "../ejector/BaseGearEjector";
 import { Number } from "shared/utilities/number.utilities";
+import { ClientGearTinkers } from "../../classes/ClientGearTinkers";
 
 export enum WallRunningDirection {
     LEFT, RIGHT
@@ -43,8 +44,8 @@ export default class BaseGearMovement extends ClientGearComponent {
         }
     }
 
-    constructor(statistics : ClientGearStatistics) {
-        super(statistics);
+    constructor(statistics : ClientGearStatistics, tinkers : ClientGearTinkers) {
+        super(statistics, tinkers);
     };
 
     private onValidWallRunAttempt(side : WallRunningDirection) : void {

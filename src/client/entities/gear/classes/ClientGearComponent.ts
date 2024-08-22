@@ -3,6 +3,7 @@ import { ClientGearStatistics } from "./ClientGearStatistics";
 import { ClientPlayerEntity } from "client/entities/player/ClientPlayerEntity";
 import { UserInputService } from "@rbxts/services";
 import { NetworkEntity } from "client/network/NetworkEntity";
+import { ClientGearTinkers } from "./ClientGearTinkers";
 
 export type GearComponentsList = Record<GearComponents, ClientGearComponent>;
 
@@ -25,7 +26,7 @@ export abstract class ClientGearComponent {
     private character : Model | undefined;
     abstract initialize(components : GearComponentsList, network : NetworkEntity): void;
 
-    constructor(protected statistics : ClientGearStatistics) {}
+    constructor(protected statistics : ClientGearStatistics, protected tinkers : ClientGearTinkers) {}
 
     public getDirectionalVector() {
         const isAPressed = UserInputService.IsKeyDown(Enum.KeyCode.A)
