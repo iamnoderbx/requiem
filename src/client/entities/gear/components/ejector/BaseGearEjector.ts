@@ -36,6 +36,7 @@ export default class BaseGearEjector extends ClientGearComponent {
     private power : Number.Ease = new Number.Ease(0);
     private direction : Vector.Ease = new Vector.Ease(new Vector3(0, 0, 0));
     private force : Vector.Ease = new Vector.Ease(new Vector3());
+    private velocity : Vector.Ease = new Vector.Ease(new Vector3());
 
     private updatedTimestamp : number = 0;
     private __direction : Vector3 = new Vector3(0, 0, 0);
@@ -47,17 +48,17 @@ export default class BaseGearEjector extends ClientGearComponent {
 
         // Add a the vertical & horizontal speeds
         this.statistics.addStatistic(GearStatisticType.VERTICAL_SPEED, 10);
-        this.statistics.addStatistic(GearStatisticType.HORIZONTAL_SPEED, 70);
+        this.statistics.addStatistic(GearStatisticType.HORIZONTAL_SPEED, 55);
 
         // Set the reel speed
         this.statistics.addStatistic(GearStatisticType.GRAPPLE_SPEED, 1.5);
 
         // Set the speed multiplier
-        this.statistics.addStatistic(GearStatisticType.SPEED_MULTIPLIER, 2);
-        this.statistics.addStatistic(GearStatisticType.GAS_MULTIPLIER, 2);
+        this.statistics.addStatistic(GearStatisticType.SPEED_MULTIPLIER, 1.8);
+        this.statistics.addStatistic(GearStatisticType.GAS_MULTIPLIER, 1.5);
         
         // Set the momentum multiplier
-        this.statistics.addStatistic(GearStatisticType.MOMENTUM_MULTIPLIER, 1.25);
+        this.statistics.addStatistic(GearStatisticType.MOMENTUM_MULTIPLIER, 1.2);
 
         // Modify the weight of the ejector
         this.statistics.addStatistic(GearStatisticType.WEIGHT, 5);
@@ -65,7 +66,7 @@ export default class BaseGearEjector extends ClientGearComponent {
         this.force.Connect(() => {
             this.bodyVelocity.MaxForce = this.force.Get();
 
-            if(this.force.Get().Magnitude < 2) {
+            if(this.force.Get().Magnitude < 1) {
                 this.bodyVelocity.Parent = undefined;
                 Physics.RestoreClientPhysics()
             }
@@ -127,7 +128,7 @@ export default class BaseGearEjector extends ClientGearComponent {
     private onEjectorDisabled() {
         this.power.EaseTo(0, new TweenInfo(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
         
-        this.force.EaseTo(new Vector3(0, 0, 0), new TweenInfo(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
+        this.force.EaseTo(new Vector3(0, 0, 0), new TweenInfo(1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out));
         this.direction.EaseTo(new Vector3(0, 0, 0), new TweenInfo(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
 
         if(this.speed.GetGoal() === 0) return;
@@ -163,7 +164,7 @@ export default class BaseGearEjector extends ClientGearComponent {
         // Set the direction
         if(this.__direction !== directionVector) {
             this.__direction = directionVector;
-            this.direction.EaseTo(directionVector, new TweenInfo(0.2, Enum.EasingStyle.Linear));
+            this.direction.EaseTo(directionVector, new TweenInfo(0.1, Enum.EasingStyle.Linear));
         }
 
         const offset = root.CFrame.mul(new CFrame(this.direction.Get())).Position;
@@ -179,8 +180,9 @@ export default class BaseGearEjector extends ClientGearComponent {
         const direction = ((center.sub(root.Position)).Unit).add(directionalSpeed);
         
         const goal = direction.mul((speed * (1 + (gas))) * (1 + power));
-        this.bodyVelocity.Velocity = this.bodyVelocity.Velocity.Lerp(goal, dt * 30);
-
+        this.velocity.EaseTo(goal, new TweenInfo(0.95 * (dt * 100), Enum.EasingStyle.Linear));
+        
+        this.bodyVelocity.Velocity = this.velocity.Get() //this.bodyVelocity.Velocity.Lerp(goal, dt * 35);
         this.updatedTimestamp = os.clock();
     }
 
