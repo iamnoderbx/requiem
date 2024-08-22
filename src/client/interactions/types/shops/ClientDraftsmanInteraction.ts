@@ -10,8 +10,6 @@ export class ClientDraftsmanInteraction {
 
     @Interactions.Interacted()
     public onInteraction(interaction: Interaction) {
-        print("Interacted with draftsman")
-
         const part = interaction.getPart();
         const position = part.Position;
 

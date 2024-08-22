@@ -16,6 +16,7 @@ import LoadingSpinnerComponent from "./routes/loading.route";
 import LandShopRoute from "./routes/shops/land.shop.route";
 import WorldEditorRoute from "./routes/editor/editor.route";
 import DraftsmanShopRoute from "./routes/shops/draftsman.shop.route";
+import TinkeringPageRoute from "./routes/pages/tinkering.page.route";
 
 export const ROOT_SCREEN_GUI = new Instance("ScreenGui");
 
@@ -38,6 +39,9 @@ export namespace InterfaceRoactProvider {
         StableShopRoute,
         LandShopRoute,
         DraftsmanShopRoute,
+
+        // Alternate Pages
+        TinkeringPageRoute,
 
         // World Editor
         WorldEditorRoute,

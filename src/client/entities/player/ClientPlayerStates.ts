@@ -4,6 +4,9 @@ import { Memory } from "shared/utilities/memory.utilities";
 export const ClientStoreSubscription : unique symbol = {} as never
 export const CURRENT_STORE_META = {id: 0}
 
+export const ClientMenuSubscription : unique symbol = {} as never
+export const MenuSubscription = Memory.subscription<number>(ClientMenuSubscription)
+
 export const StoreInventorySubscription = Memory.createEmptySubscription("stores");
 export const StoreSubscription = Memory.subscription<number>(ClientStoreSubscription)
 
@@ -11,6 +14,7 @@ export const StoreSubscription = Memory.subscription<number>(ClientStoreSubscrip
 StoreSubscription.set(0)
 
 export enum ClientStoreTypes { NONE = 0, STABLE = 1, LAND_PROPRIETOR = 2, DRAFTSMAN = 3, }
+export enum ClientMenuTypes { NONE = 0, GEAR = 1, }
 
 export namespace States {
     // Create a memory object with a blocking state

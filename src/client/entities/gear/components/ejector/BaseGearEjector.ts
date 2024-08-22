@@ -64,7 +64,7 @@ export default class BaseGearEjector extends ClientGearComponent {
         // Modify the weight of the ejector
         this.statistics.addStatistic(GearStatisticType.WEIGHT, 5);
 
-        // Tinkers
+        // Tinkers <min, max> value = average
         this.tinkers.setTinkerDefault(GearTinkerType.AERIAL_DIRECTION_GEAR, 0.09, 0.11)
         this.tinkers.setTinkerDefault(GearTinkerType.AERIAL_DIRECTION_RELEASE, 0.25, 0.35)
 
