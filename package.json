@@ -1,0 +1,31 @@
+{
+  "name": "requiem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "rbxtsc",
+    "watch": "rbxtsc -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rbxts/compiler-types": "^2.2.0-types.0",
+    "@rbxts/types": "^1.0.750",
+    "roblox-ts": "^2.2.0",
+    "typedoc": "^0.25.10",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@rbxts/maid": "^1.1.0",
+    "@rbxts/object-utils": "^1.0.4",
+    "@rbxts/octo-tree": "^0.3.1",
+    "@rbxts/pretty-roact-hooks": "^3.2.1",
+    "@rbxts/profileservice": "^1.4.2",
+    "@rbxts/roact": "^1.4.4-ts.0",
+    "@rbxts/roact-hooked": "^2.6.2",
+    "@rbxts/services": "^1.5.4",
+    "@rbxts/set-timeout": "^1.1.2"
+  }
+}

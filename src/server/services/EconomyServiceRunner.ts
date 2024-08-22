@@ -1,0 +1,2 @@
+export const GLOBAL_INFLATION_RATE = 0.02;
+export const HORSE_INFLATION_RATE = 0.05;
