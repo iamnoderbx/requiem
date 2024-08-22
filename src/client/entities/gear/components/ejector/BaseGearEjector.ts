@@ -46,8 +46,6 @@ export default class BaseGearEjector extends ClientGearComponent {
     constructor(statistics : ClientGearStatistics) {
         super(statistics);
 
-        // Set boilerplate for tinkers.
-
         // Add a the vertical & horizontal speeds
         this.statistics.addStatistic(GearStatisticType.VERTICAL_SPEED, 10);
         this.statistics.addStatistic(GearStatisticType.HORIZONTAL_SPEED, 55);
@@ -119,20 +117,27 @@ export default class BaseGearEjector extends ClientGearComponent {
         const speedMultiplier = this.statistics.getStatistic(GearStatisticType.SPEED_MULTIPLIER);
         const momentumMultiplier = this.statistics.getStatistic(GearStatisticType.MOMENTUM_MULTIPLIER);
 
+        // MOMENTUM_THROTTLE_GEAR
         if(this.power.GetGoal() !== momentumMultiplier) {
             this.power.EaseTo(momentumMultiplier, new TweenInfo(15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
         }
 
+        // AERIAL_MOMENTUM_GEAR
         if(this.speed.GetGoal() === horizontalGearSpeed * speedMultiplier) return;
         this.speed.EaseTo(horizontalGearSpeed * speedMultiplier, new TweenInfo(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
     }
 
     private onEjectorDisabled() {
+        // MOMENTUM_THROTTLE_RELEASE
         this.power.EaseTo(0, new TweenInfo(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
         
+        // AERIAL_MOMENTUM_GEAR
         this.force.EaseTo(new Vector3(0, 0, 0), new TweenInfo(1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out));
+
+        // AERIAL_DIRECTION_GEAR
         this.direction.EaseTo(new Vector3(0, 0, 0), new TweenInfo(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
 
+        // SPEED_MULTIPLIER_RELEASE
         if(this.speed.GetGoal() === 0) return;
         this.speed.EaseTo(0, new TweenInfo(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
     }
@@ -182,6 +187,8 @@ export default class BaseGearEjector extends ClientGearComponent {
         const direction = ((center.sub(root.Position)).Unit).add(directionalSpeed);
         
         const goal = direction.mul((speed * (1 + (gas))) * (1 + power));
+
+        // GRAPPLE_FORCE_DELTA
         this.velocity.EaseTo(goal, new TweenInfo(0.95 * (dt * 100), Enum.EasingStyle.Linear));
         
         this.bodyVelocity.Velocity = this.velocity.Get() //this.bodyVelocity.Velocity.Lerp(goal, dt * 35);
@@ -207,9 +214,11 @@ export default class BaseGearEjector extends ClientGearComponent {
             const gasMultiplier = this.statistics.getStatistic(GearStatisticType.GAS_MULTIPLIER);
 
             if(isBoosting) {
-                this.gas.EaseTo(gasMultiplier, new TweenInfo(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
+                // GAS_BOOST_GEAR
+                this.gas.EaseTo(gasMultiplier, new TweenInfo(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
             } else {
-                this.gas.EaseTo(0, new TweenInfo(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
+                // GAS_BOOST_RELEASE
+                this.gas.EaseTo(0, new TweenInfo(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
             }
         })
     }
