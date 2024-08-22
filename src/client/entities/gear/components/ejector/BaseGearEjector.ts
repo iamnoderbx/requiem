@@ -9,7 +9,7 @@ import BaseGearWinches from "../winches/BaseGearWinches";
 import { Number } from "shared/utilities/number.utilities";
 import { NetworkEntity } from "client/network/NetworkEntity";
 import { Vector } from "shared/utilities/vector3.utilities";
-import { ClientGearTinkers } from "../../classes/ClientGearTinkers";
+import { ClientGearTinkers, GearTinkerType } from "../../classes/ClientGearTinkers";
 
 export enum GearEjectorDirection {
     FORWARD = "FORWARD",
@@ -65,7 +65,20 @@ export default class BaseGearEjector extends ClientGearComponent {
         this.statistics.addStatistic(GearStatisticType.WEIGHT, 5);
 
         // Tinkers
-        
+        this.tinkers.setTinkerDefault(GearTinkerType.AERIAL_DIRECTION_GEAR, 0.09, 0.11)
+        this.tinkers.setTinkerDefault(GearTinkerType.AERIAL_DIRECTION_RELEASE, 0.25, 0.35)
+
+        this.tinkers.setTinkerDefault(GearTinkerType.GAS_BOOST_GEAR, 0.25, 0.35)
+        this.tinkers.setTinkerDefault(GearTinkerType.GAS_BOOST_RELEASE, 0.1, 0.3)
+       
+        this.tinkers.setTinkerDefault(GearTinkerType.MOMENTUM_THROTTLE_GEAR, 10, 20)
+        this.tinkers.setTinkerDefault(GearTinkerType.MOMENTUM_THROTTLE_RELEASE, 1, 3)
+
+        this.tinkers.setTinkerDefault(GearTinkerType.SPEED_MULTIPLIER_GEAR, 0.9, 1.1)
+        this.tinkers.setTinkerDefault(GearTinkerType.SPEED_MULTIPLIER_RELEASE, 0.3, 0.7)
+
+        this.tinkers.setTinkerDefault(GearTinkerType.AERIAL_MOMENTUM_GEAR, 0.9, 1.1)
+        this.tinkers.setTinkerDefault(GearTinkerType.GRAPPLE_FORCE_DELTA, 0.8, 1.1)
     };
 
     private create() {
@@ -113,28 +126,35 @@ export default class BaseGearEjector extends ClientGearComponent {
         const momentumMultiplier = this.statistics.getStatistic(GearStatisticType.MOMENTUM_MULTIPLIER);
 
         // MOMENTUM_THROTTLE_GEAR
+        const MOMENTUM_THROTTLE_GEAR = this.tinkers.getTinkerValue(GearTinkerType.MOMENTUM_THROTTLE_GEAR)
         if(this.power.GetGoal() !== momentumMultiplier) {
-            this.power.EaseTo(momentumMultiplier, new TweenInfo(15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
+            this.power.EaseTo(momentumMultiplier, new TweenInfo(MOMENTUM_THROTTLE_GEAR, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
         }
 
-        // AERIAL_MOMENTUM_GEAR
+        // SPEED_MULTIPLIER_GEAR
+        const SPEED_MULTIPLIER_GEAR = this.tinkers.getTinkerValue(GearTinkerType.SPEED_MULTIPLIER_GEAR)
         if(this.speed.GetGoal() === horizontalGearSpeed * speedMultiplier) return;
-        this.speed.EaseTo(horizontalGearSpeed * speedMultiplier, new TweenInfo(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
+        this.speed.EaseTo(horizontalGearSpeed * speedMultiplier, new TweenInfo(SPEED_MULTIPLIER_GEAR, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
     }
 
     private onEjectorDisabled() {
         // MOMENTUM_THROTTLE_RELEASE
-        this.power.EaseTo(0, new TweenInfo(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
+        const MOMENTUM_THROTTLE_RELEASE = this.tinkers.getTinkerValue(GearTinkerType.MOMENTUM_THROTTLE_RELEASE)
+        this.power.EaseTo(0, new TweenInfo(MOMENTUM_THROTTLE_RELEASE, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
         
         // AERIAL_MOMENTUM_GEAR
-        this.force.EaseTo(new Vector3(0, 0, 0), new TweenInfo(1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out));
+        const AERIAL_MOMENTUM_GEAR = this.tinkers.getTinkerValue(GearTinkerType.AERIAL_MOMENTUM_GEAR)
+        this.force.EaseTo(new Vector3(0, 0, 0), new TweenInfo(AERIAL_MOMENTUM_GEAR, Enum.EasingStyle.Sine, Enum.EasingDirection.Out));
 
-        // AERIAL_DIRECTION_GEAR
-        this.direction.EaseTo(new Vector3(0, 0, 0), new TweenInfo(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
+        // AERIAL_DIRECTION_RELEASE
+        const AERIAL_DIRECTION_RELEASE = this.tinkers.getTinkerValue(GearTinkerType.AERIAL_DIRECTION_RELEASE)
+        this.direction.EaseTo(new Vector3(0, 0, 0), new TweenInfo(AERIAL_DIRECTION_RELEASE, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
 
         // SPEED_MULTIPLIER_RELEASE
+        const SPEED_MULTIPLIER_RELEASE = this.tinkers.getTinkerValue(GearTinkerType.SPEED_MULTIPLIER_RELEASE)
+
         if(this.speed.GetGoal() === 0) return;
-        this.speed.EaseTo(0, new TweenInfo(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
+        this.speed.EaseTo(0, new TweenInfo(SPEED_MULTIPLIER_RELEASE, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
     }
 
     // Updated is called every frame that a grapple is active
@@ -166,7 +186,10 @@ export default class BaseGearEjector extends ClientGearComponent {
         // Set the direction
         if(this.__direction !== directionVector) {
             this.__direction = directionVector;
-            this.direction.EaseTo(directionVector, new TweenInfo(0.1, Enum.EasingStyle.Linear));
+            
+            // AERIAL_DIRECTION_GEAR
+            const AERIAL_DIRECTION_GEAR = this.tinkers.getTinkerValue(GearTinkerType.AERIAL_DIRECTION_GEAR)
+            this.direction.EaseTo(directionVector, new TweenInfo(AERIAL_DIRECTION_GEAR, Enum.EasingStyle.Linear));
         }
 
         const offset = root.CFrame.mul(new CFrame(this.direction.Get())).Position;
@@ -184,7 +207,8 @@ export default class BaseGearEjector extends ClientGearComponent {
         const goal = direction.mul((speed * (1 + (gas))) * (1 + power));
 
         // GRAPPLE_FORCE_DELTA
-        this.velocity.EaseTo(goal, new TweenInfo(0.95 * (dt * 100), Enum.EasingStyle.Linear));
+        const GRAPPLE_FORCE_DELTA = this.tinkers.getTinkerValue(GearTinkerType.GRAPPLE_FORCE_DELTA)
+        this.velocity.EaseTo(goal, new TweenInfo(GRAPPLE_FORCE_DELTA * (dt * 100), Enum.EasingStyle.Linear));
         
         this.bodyVelocity.Velocity = this.velocity.Get() //this.bodyVelocity.Velocity.Lerp(goal, dt * 35);
         this.updatedTimestamp = os.clock();
@@ -220,10 +244,12 @@ export default class BaseGearEjector extends ClientGearComponent {
 
             if(isBoosting) {
                 // GAS_BOOST_GEAR
-                this.gas.EaseTo(gasMultiplier, new TweenInfo(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
+                const GAS_BOOST_GEAR = this.tinkers.getTinkerValue(GearTinkerType.GAS_BOOST_GEAR)
+                this.gas.EaseTo(gasMultiplier, new TweenInfo(GAS_BOOST_GEAR, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
             } else {
                 // GAS_BOOST_RELEASE
-                this.gas.EaseTo(0, new TweenInfo(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
+                const GAS_BOOST_RELEASE = this.tinkers.getTinkerValue(GearTinkerType.GAS_BOOST_RELEASE)
+                this.gas.EaseTo(0, new TweenInfo(GAS_BOOST_RELEASE, Enum.EasingStyle.Quad, Enum.EasingDirection.Out));
             }
         })
     }

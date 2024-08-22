@@ -42,6 +42,13 @@ export class ClientGearTinkers {
 		[GearTinkerType.GRAPPLE_FORCE_DELTA]: {max: 0, min: 0, value : 0},
 	};
 
+	public setTinkerDefault(tinker : GearTinkerType, min : number, max : number) {
+		this.tinkers[tinker].min = min;
+		this.tinkers[tinker].max = max;
+		
+		this.tinkers[tinker].value = (min + max) / 2;
+	}
+
 	private updateTinkerValueToAverage(tinker: GearTinkerBase) {
 		tinker.value = (tinker.max + tinker.min) / 2;
 	}
