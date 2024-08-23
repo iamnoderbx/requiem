@@ -2,7 +2,7 @@ import Roact from "@rbxts/roact";
 import { useEffect, useRef, useState } from "@rbxts/roact-hooked";
 import { RunService } from "@rbxts/services";
 
-export function EntryViewportFrame(props: {Model? : Model} & Roact.PropsWithChildren): Roact.Element {
+export function EntryViewportFrame(props: {Model? : Model, Scale?: number, Spins?: boolean} & Roact.PropsWithChildren): Roact.Element {
 	const ref = useRef<ViewportFrame>();
 	const [ hovered, setHovered ] = useState(false);
 	const [ model, setModel ] = useState<Model>();
@@ -36,15 +36,17 @@ export function EntryViewportFrame(props: {Model? : Model} & Roact.PropsWithChil
 			}
 
 			let minDist = (maxExtent / 5) / tan + diagonal;
-			camera.CFrame = modelCF.mul(CFrame.fromEulerAnglesXYZ(0, math.rad(angle), 0).mul(new CFrame(0, 0, minDist + 3)));
+			camera.CFrame = modelCF.mul(CFrame.fromEulerAnglesXYZ(0, math.rad(angle), 0).mul(new CFrame(0, 0, minDist + (props.Scale ?? 3))));
 
 			spin && setConnection(RunService.RenderStepped.Connect((dt) => {
 				angle += (0.2 * dt * 60);
-				camera.CFrame = modelCF.mul(CFrame.fromEulerAnglesXYZ(0, math.rad(angle), 0).mul(new CFrame(0, 0, minDist + 3)));
+				camera.CFrame = modelCF.mul(CFrame.fromEulerAnglesXYZ(0, math.rad(angle), 0).mul(new CFrame(0, 0, minDist + (props.Scale ?? 3))));
 			}));
 		}
 
 		const viewport = ref.getValue()!;
+
+		if(ref.getValue()?.CurrentCamera) ref.getValue()?.CurrentCamera?.Destroy();
 
 		const camera = new Instance("Camera");
 		camera.Parent = ref.getValue();
@@ -66,7 +68,7 @@ export function EntryViewportFrame(props: {Model? : Model} & Roact.PropsWithChil
 		calculateCameraAngle(camera, model, 45 + 180, false);
 
 		if(connection) connection.Disconnect();
-		if(hovered) {
+		if(hovered && props.Spins !== false) {
 			calculateCameraAngle(camera, model, 45 + 180, true);
 		}
 
@@ -130,7 +132,7 @@ export function EntryViewportDataListComponent(props: {} & Roact.PropsWithChildr
 	</frame>
 }
 
-export default function EntryViewportComponent(props: {} & Roact.PropsWithChildren): Roact.Element {
+export default function EntryViewportComponent(props: {Position?: UDim2, Transparent?: boolean} & Roact.PropsWithChildren): Roact.Element {
 	return (
 		<frame
 			BackgroundColor3={Color3.fromRGB(41, 42, 48)}
@@ -138,7 +140,7 @@ export default function EntryViewportComponent(props: {} & Roact.PropsWithChildr
 			BorderColor3={Color3.fromRGB(0, 0, 0)}
 			BorderSizePixel={0}
 			LayoutOrder={2}
-			Position={UDim2.fromScale(0.0188, 0.267)}
+			Position={props.Position ?? UDim2.fromScale(0.0188, 0.267)}
 			Size={UDim2.fromScale(0.962, 0.657)}
 			Key={"log1"}
 		>
@@ -147,17 +149,18 @@ export default function EntryViewportComponent(props: {} & Roact.PropsWithChildr
 			<imagelabel
 				Image={"rbxassetid://16255699706"}
 				ImageColor3={Color3.fromRGB(149, 197, 255)}
-				ImageTransparency={0.97}
+				ImageTransparency={props.Transparent ? 1 : 0.97}
 				ScaleType={Enum.ScaleType.Crop}
 				AnchorPoint={new Vector2(0.5, 0.5)}
 				BackgroundColor3={Color3.fromRGB(31, 33, 39)}
-				BackgroundTransparency={0.35}
+				BackgroundTransparency={props.Transparent ? 1 : 0.35}
 				BorderColor3={Color3.fromRGB(0, 0, 0)}
 				BorderSizePixel={0}
 				Position={UDim2.fromScale(0.5, 0.5)}
 				Size={UDim2.fromScale(1, 1)}
 				Key={"menu1"}
 				ZIndex={-1}
+
 			>
 				<uicorner Key={"UICorner"} />
 			</imagelabel>

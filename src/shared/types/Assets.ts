@@ -1,6 +1,6 @@
 export type Assets = {
     gear: Folder & {
-        DefaultODMGear: Model,
+        0: Model,
     },
 
     handles: Folder & {
