@@ -30,7 +30,7 @@ export function EntryHeaderLabelComponent(props: { Text: string, Transparency?: 
     />
 };
 
-export default function EntryLabelComponent(props: { Text: string, Transparency?: number, Bold?: boolean }): Roact.Element {
+export default function EntryLabelComponent(props: { Text: string, Transparency?: number, Bold?: boolean, LayoutOrder?: number}): Roact.Element {
     return <textlabel
         FontFace={new Font("rbxasset://fonts/families/SourceSansPro.json", props.Bold ? Enum.FontWeight.Bold : Enum.FontWeight.Regular)}
         RichText={true}
@@ -51,6 +51,7 @@ export default function EntryLabelComponent(props: { Text: string, Transparency?
         Size={UDim2.fromScale(0, 1)}
         ZIndex={2}
         Key={"name1"}
+        LayoutOrder={props.LayoutOrder}
     />
 }
 

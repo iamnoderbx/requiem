@@ -27,7 +27,7 @@ export const BasicTransparencyGroup = withHooks((props: {Visible: boolean, Size:
     </TransparencyGroup>
 })
 
-export function SubPageScrollComponent(props: {Centered?: boolean, Size?: UDim2, Position?: UDim2, AnchorPoint?: Vector2, ClipsDescendants?: boolean} & Roact.PropsWithChildren) {
+export function SubPageScrollComponent(props: {Centered?: boolean, Size?: UDim2, Position?: UDim2, AnchorPoint?: Vector2, ClipsDescendants?: boolean, ZIndex?: number} & Roact.PropsWithChildren) {
     
     return (
         <scrollingframe
@@ -45,6 +45,7 @@ export function SubPageScrollComponent(props: {Centered?: boolean, Size?: UDim2,
             Size={props.Size ?? UDim2.fromScale(0.961, 0.9)}
             Key={"holder"}
             ClipsDescendants={props.ClipsDescendants ?? true}
+            ZIndex={props.ZIndex}
         >
             {/* <uiaspectratioconstraint
                 Key={"UIAspectRatioConstraint1"}

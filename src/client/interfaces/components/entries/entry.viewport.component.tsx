@@ -2,7 +2,7 @@ import Roact from "@rbxts/roact";
 import { useEffect, useRef, useState } from "@rbxts/roact-hooked";
 import { RunService } from "@rbxts/services";
 
-export function EntryViewportFrame(props: {Model? : Model, Scale?: number, Spins?: boolean} & Roact.PropsWithChildren): Roact.Element {
+export function EntryViewportFrame(props: {Model? : Model, Scale?: number, Spins?: boolean, Size?: UDim2} & Roact.PropsWithChildren): Roact.Element {
 	const ref = useRef<ViewportFrame>();
 	const [ hovered, setHovered ] = useState(false);
 	const [ model, setModel ] = useState<Model>();
@@ -95,7 +95,7 @@ export function EntryViewportFrame(props: {Model? : Model, Scale?: number, Spins
 		BorderColor3={Color3.fromRGB(0, 0, 0)}
 		BorderSizePixel={0}
 		Position={UDim2.fromScale(0.5, 0.5)}
-		Size={UDim2.fromScale(1, 1)}
+		Size={props.Size ?? UDim2.fromScale(1, 1)}
 		Ref={ref}
 		Event={{
 			MouseEnter: () => setHovered(true),
