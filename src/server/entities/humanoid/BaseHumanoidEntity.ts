@@ -61,6 +61,11 @@ export class BaseHumanoidEntity extends BaseEntity implements ComponentFunctiona
             (promise) => promise.then(() => this.initialize()))
     }
 
+    /**
+     * Creates a new look gyro for the humanoid entity.
+     * 
+     * @returns BodyGyro
+     */
     public createTurnGyro() {
         const root = this.instance.FindFirstChild("HumanoidRootPart") as BasePart;
         if(!root) return;
@@ -77,6 +82,11 @@ export class BaseHumanoidEntity extends BaseEntity implements ComponentFunctiona
         return bodyGyro
     }
 
+    /**
+     * Checks if the humanoid is an NPC.
+     * 
+     * @returns {boolean} Whether the humanoid is an NPC.
+     */
     public isNPC() {
         const ownership = this.getComponent(UtilityNumberComponent);
         return ownership.get() === 0;
